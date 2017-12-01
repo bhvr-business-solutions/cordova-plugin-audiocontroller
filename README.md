@@ -6,15 +6,15 @@ Music controls for Cordova applications. Display a 'media' notification with pla
 
 ## Supported platforms
 - Android (4.1+)
-- iOS 8+ (by [0505gonzalez](https://github.com/0505gonzalez))
+- iOS 8+
 
 ## Installation
-`cordova plugin add https://github.com/homerours/cordova-music-controls-plugin`
+`cordova plugin add https://github.com/bhvr-business-solutions/cordova-plugin-audiocontroller`
 
 ## Methods
 - Create the media controls:
 ```javascript
-AudioController.set({
+AudioController.setControls({
     track       : 'Time is Running Out',		// optional, default : ''
 	artist      : 'Muse',						// optional, default : ''
     cover       : 'albums/absolution.jpg',		// optional, default : nothing

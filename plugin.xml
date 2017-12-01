@@ -12,6 +12,7 @@
 
     <!-- android -->
     <platform name="android">
+    
       <js-module src="www/plugin.js" name="plugin">
         <runs/>
 
@@ -20,11 +21,20 @@
       </js-module>
       <config-file target="res/xml/config.xml" parent="/*">
         <feature name="AudioController">
-          <param name="android-package" value="com.example.AudioController" />
+          <param name="android-package" value="com.mokto.AudioController" />
           <param name="onload" value="true" />
         </feature>
       </config-file>
 
+      <config-file target="AndroidManifest.xml" parent="application">
+        <receiver android:name="RemoteControlReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON"></action>
+            </intent-filter>
+        </receiver>
+      </config-file>
+
+      <framework src="com.android.support:support-media-compat:27.0.2"/>
       <source-file src="src/android/com/mokto/AudioController.java" target-dir="src/com/mokto/" />
     </platform>
 
