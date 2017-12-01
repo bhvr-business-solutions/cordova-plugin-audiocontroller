@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    id="cordova-plugin-audiocontroller"
+    version="1.0.0">
+    <name>Cordova Plugin Audio Controller</name>
+    <description></description>
+    <license>MIT</license>
+    <keywords></keywords>
+    <repo>https://github.com/bhvr-business-solutions/cordova-plugin-audiocontroller.git</repo>
+    <issue>https://github.com/bhvr-business-solutions/cordova-plugin-audiocontroller/issues</issue>
+
+    <!-- android -->
+    <platform name="android">
+      <js-module src="www/plugin.js" name="plugin">
+        <runs/>
+
+        <!-- This is the window variable name you want, like window.MyCordovaPlugin -->
+        <clobbers target="AudioController" />
+      </js-module>
+      <config-file target="res/xml/config.xml" parent="/*">
+        <feature name="AudioController">
+          <param name="android-package" value="com.example.AudioController" />
+          <param name="onload" value="true" />
+        </feature>
+      </config-file>
+
+      <source-file src="src/android/com/mokto/AudioController.java" target-dir="src/com/mokto/" />
+    </platform>
+
+    <!-- ios -->
+    <platform name="ios">
+        <js-module src="www/plugin.js" name="plugin">
+            <runs/>
+            <clobbers target="AudioController" />
+        </js-module>
+        <config-file target="config.xml" parent="/*">
+            <feature name="AudioController">
+                <param name="ios-package" value="AudioController" onload="true" />
+            </feature>
+        </config-file>
+
+        <header-file src="src/ios/AudioController.h" />
+        <source-file src="src/ios/AudioController.m" />
+		<header-file src="src/ios/MusicControlsInfo.h" />
+		<source-file src="src/ios/MusicControlsInfo.m" />
+    </platform>
+</plugin>
