@@ -13,13 +13,24 @@ var AudioController = {
       return;
     }
 
-    alert('subscribe');
-    exec(function(args) {
-      var message = arguments[0];
+    this.watch(this.watch);
+  },
+
+  watch: function(callback) {
+    exec(function(message) {
+
+      var time;
+
+      if (message.indexOf('|') !== -1) {
+        time = parseFloat(message.split('|')[1]);
+        message = message.split('|')[0];
+      }
 
       for(var i in cbs) {
-        cbs[i](message);
+        cbs[i](message, time);
       }
+
+      callback();
     }, null, PLUGIN_NAME, 'subscribe', []);
   },
 
@@ -49,7 +60,6 @@ var AudioController = {
     data.closeIcon = !isUndefined(data.closeIcon) ? data.closeIcon : "";
     data.notificationIcon = !isUndefined(data.notificationIcon) ? data.notificationIcon : "";
 
-    alert('setControls');
     exec(function() {}, null, PLUGIN_NAME, 'setControls', [data]);
   }
 };

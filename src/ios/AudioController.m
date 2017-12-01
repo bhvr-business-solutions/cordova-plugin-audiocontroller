@@ -167,8 +167,7 @@ MusicControlsInfo * musicControlsInfo;
         return;
     }
     
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"seek"];
-    result.associatedObject = @{@"position":[NSNumber numberWithDouble: positionTime]};
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[NSString stringWithFormat: @"seek|%f", positionTime]];
     [self.commandDelegate sendPluginResult:result callbackId:[self latestEventCallbackId]];
 }
 
