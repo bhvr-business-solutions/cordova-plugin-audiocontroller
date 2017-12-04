@@ -30,7 +30,7 @@ var AudioController = {
         cbs[i](message, time);
       }
 
-      this.watch();
+      AudioController.watch();
     }, null, PLUGIN_NAME, 'subscribe', []);
   },
 
