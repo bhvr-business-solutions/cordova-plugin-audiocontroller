@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-audiocontroller",
-  "version": "0.9.0",
+  "version": "0.9.2",
   "cordova": {
     "id": "cordova-plugin-audiocontroller",
     "platforms": [
@@ -8,5 +8,14 @@
       "ios"
     ]
   },
-  "description": "A starting point for a Cordova Plugin"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bhvr-business-solutions/cordova-plugin-audiocontroller.git"
+  },
+  "description": "Music controls for Cordova apps",
+  "author": "mokto",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bhvr-business-solutions/cordova-plugin-audiocontroller/issues"
+  }
 }

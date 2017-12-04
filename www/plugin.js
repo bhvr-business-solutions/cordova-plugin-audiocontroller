@@ -13,10 +13,10 @@ var AudioController = {
       return;
     }
 
-    this.watch(this.watch);
+    this.watch();
   },
 
-  watch: function(callback) {
+  watch: function() {
     exec(function(message) {
 
       var time;
@@ -30,7 +30,7 @@ var AudioController = {
         cbs[i](message, time);
       }
 
-      callback();
+      this.watch();
     }, null, PLUGIN_NAME, 'subscribe', []);
   },
 
