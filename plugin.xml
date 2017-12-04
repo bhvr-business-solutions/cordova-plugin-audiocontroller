@@ -19,23 +19,28 @@
         <!-- This is the window variable name you want, like window.MyCordovaPlugin -->
         <clobbers target="AudioController" />
       </js-module>
-      <config-file target="res/xml/config.xml" parent="/*">
-        <feature name="AudioController">
-          <param name="android-package" value="com.mokto.AudioController" />
-          <param name="onload" value="true" />
-        </feature>
-      </config-file>
 
-      <config-file target="AndroidManifest.xml" parent="application">
-        <receiver android:name="RemoteControlReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON"></action>
-            </intent-filter>
-        </receiver>
-      </config-file>
+    <framework src="com.android.support:support-media-compat:27.0.2"/>
+		<config-file target="res/xml/config.xml" parent="/*">
+			<feature name="AudioController" >
+				<param name="android-package" value="com.mokto.audiocontroller.AudioController"/>
+			</feature>
+		</config-file>
 
-      <framework src="com.android.support:support-media-compat:27.0.2"/>
-      <source-file src="src/android/com/mokto/AudioController.java" target-dir="src/com/mokto/" />
+		<config-file target="AndroidManifest.xml" parent="/*">
+			<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+		</config-file>
+
+		<config-file target="AndroidManifest.xml" parent="/manifest/application">
+			<service android:name="com.mokto.audiocontroller.AudioControllerNotificationKiller"></service>
+		</config-file>
+
+		<source-file src="src/android/AudioController.java" target-dir="src/com/mokto/audiocontroller" />
+		<source-file src="src/android/AudioControllerBroadcastReceiver.java" target-dir="src/com/mokto/audiocontroller" />
+		<source-file src="src/android/AudioControllerNotification.java" target-dir="src/com/mokto/audiocontroller" />
+		<source-file src="src/android/AudioControllerNotificationKiller.java" target-dir="src/com/mokto/audiocontroller" />
+		<source-file src="src/android/AudioControllerInfos.java" target-dir="src/com/mokto/audiocontroller" />
+		<source-file src="src/android/KillBinder.java" target-dir="src/com/mokto/audiocontroller" />
     </platform>
 
     <!-- ios -->

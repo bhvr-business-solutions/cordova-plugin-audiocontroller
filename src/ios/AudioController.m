@@ -12,82 +12,77 @@ MusicControlsInfo * musicControlsInfo;
 @implementation AudioController
 
 - (void)subscribe:(CDVInvokedUrlCommand *)command {
-    NSLog(@"Subscribe");
-    [self setLatestEventCallbackId:command.callbackId];
-}
-
-- (void)setControls:(CDVInvokedUrlCommand *)command {
-    NSLog(@"setControls");
-    
-    if (!NSClassFromString(@"MPNowPlayingInfoCenter")) {
-        return;
-    }
-
-    musicControlsInfo = [[MusicControlsInfo alloc] initWithDictionary:[command.arguments objectAtIndex:0]];
-    MPMediaItemArtwork *albumArt = [[MPMediaItemArtwork alloc] initWithImage: [UIImage imageWithData:
-        [NSData dataWithContentsOfURL: [NSURL URLWithString:[musicControlsInfo cover]]]
-    ]];
-    
     [self.commandDelegate runInBackground:^{
-        MPNowPlayingInfoCenter * nowPlayingInfoCenter =  [MPNowPlayingInfoCenter defaultCenter];
-        
-        NSMutableDictionary *songInfo = [[NSMutableDictionary alloc] init];
-        
-        [songInfo setObject:[musicControlsInfo track] forKey:MPMediaItemPropertyTitle];
-        [songInfo setObject:[musicControlsInfo artist] forKey:MPMediaItemPropertyArtist];
-        [songInfo setObject:albumArt forKey:MPMediaItemPropertyArtwork];
-        [songInfo setObject:[NSNumber numberWithBool: [musicControlsInfo isPlaying]] forKey:MPNowPlayingInfoPropertyPlaybackRate];
-        [songInfo setObject:[NSNumber numberWithInt:[musicControlsInfo duration]] forKey:MPMediaItemPropertyPlaybackDuration];
-        [songInfo setObject:[NSNumber numberWithInt:[musicControlsInfo elapsed]] forKey:MPNowPlayingInfoPropertyElapsedPlaybackTime];
-        
-        if ([musicControlsInfo album] != nil) {
-            [songInfo setObject:[musicControlsInfo album] forKey:MPMediaItemPropertyAlbumTitle];
-        }
-        
-        [nowPlayingInfoCenter setNowPlayingInfo:songInfo];
-        [self setCommands];
-        
+        NSLog(@"Subscribe");
+        [self setLatestEventCallbackId:command.callbackId];
     }];
 }
 
-- (MPMediaItemArtwork *) getCover: (NSString *) coverUri {
-    UIImage * coverImage = nil;
+- (void)setControls:(CDVInvokedUrlCommand *)command {
     
-    if (coverUri == nil) {
-        return nil;
-    }
-    
-    if ([coverUri hasPrefix:@"http://"] || [coverUri hasPrefix:@"https://"]) {
-        NSURL * coverImageUrl = [NSURL URLWithString:coverUri];
-        NSData * coverImageData = [NSData dataWithContentsOfURL: coverImageUrl];
+    [self.commandDelegate runInBackground:^{
+        NSLog(@"setControls");
         
-        coverImage = [UIImage imageWithData: coverImageData];
-    }
-    else if ([coverUri hasPrefix:@"file://"]) {
-        NSString * fullCoverImagePath = [coverUri stringByReplacingOccurrencesOfString:@"file://" withString:@""];
-        
-        if ([[NSFileManager defaultManager] fileExistsAtPath: fullCoverImagePath]) {
-            coverImage = [[UIImage alloc] initWithContentsOfFile: fullCoverImagePath];
+        if (!NSClassFromString(@"MPNowPlayingInfoCenter")) {
+            NSLog(@"setControls failed (class not existing)");
+            return;
         }
-    }
-    else if (![coverUri isEqual:@""]) {
-        NSString * baseCoverImagePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-        NSString * fullCoverImagePath = [NSString stringWithFormat:@"%@%@", baseCoverImagePath, coverUri];
         
-        if ([[NSFileManager defaultManager] fileExistsAtPath:fullCoverImagePath]) {
-            coverImage = [UIImage imageNamed:fullCoverImagePath];
-        }
-    }
-    else {
-        coverImage = [UIImage imageNamed:@"none"];
-    }
-    
-    return [self isCoverImageValid:coverImage] ? [[MPMediaItemArtwork alloc] initWithImage:coverImage] : nil;
+        musicControlsInfo = [[MusicControlsInfo alloc] initWithDictionary:[command.arguments objectAtIndex:0]];
+        [self setInfos];
+        [self setCommands];
+    }];
 }
 
-- (bool) isCoverImageValid: (UIImage *) coverImage {
-    return coverImage != nil && ([coverImage CIImage] != nil || [coverImage CGImage] != nil);
+//- (void)unsetControls:(CDVInvokedUrlCommand *)command {
+//    [self.commandDelegate runInBackground:^{
+//        NSLog(@"unsetCommands");
+//        [self unsetCommands];
+//        [self unsetInfos];
+//        MPNowPlayingInfoCenter * nowPlayingInfoCenter =  [MPNowPlayingInfoCenter defaultCenter];
+//        nowPlayingInfoCenter.playbackState = 3; //STOPPED
+//    }];
+//}
+    
+//- (void)updateIsPlaying:(CDVInvokedUrlCommand *)command {
+//    [self.commandDelegate runInBackground:^{
+//
+//        bool isPlaying = [[command.arguments objectAtIndex:0] boolValue];
+//
+//        MPNowPlayingInfoCenter * nowPlayingInfoCenter =  [MPNowPlayingInfoCenter defaultCenter];
+//        NSNumber * playbackRate = [NSNumber numberWithBool:[musicControlsInfo isPlaying]];
+//
+//        nowPlayingInfoCenter.playbackState = isPlaying ? 1 : 2;
+//
+//    }];
+//}
+
+- (void) setInfos {
+    MPMediaItemArtwork *albumArt = [self createCoverArtwork:[musicControlsInfo cover]];
+    
+    MPNowPlayingInfoCenter * nowPlayingInfoCenter =  [MPNowPlayingInfoCenter defaultCenter];
+    
+    NSMutableDictionary *songInfo = [[NSMutableDictionary alloc] init];
+    
+    [songInfo setObject:[musicControlsInfo track] forKey:MPMediaItemPropertyTitle];
+    [songInfo setObject:[musicControlsInfo artist] forKey:MPMediaItemPropertyArtist];
+    [songInfo setObject:albumArt forKey:MPMediaItemPropertyArtwork];
+    [songInfo setObject:[NSNumber numberWithBool: [musicControlsInfo isPlaying]] forKey:MPNowPlayingInfoPropertyPlaybackRate];
+    [songInfo setObject:[NSNumber numberWithInt:[musicControlsInfo duration]] forKey:MPMediaItemPropertyPlaybackDuration];
+    [songInfo setObject:[NSNumber numberWithInt:[musicControlsInfo elapsed]] forKey:MPNowPlayingInfoPropertyElapsedPlaybackTime];
+    
+    if ([musicControlsInfo album] != nil) {
+        [songInfo setObject:[musicControlsInfo album] forKey:MPMediaItemPropertyAlbumTitle];
+    }
+    
+    [nowPlayingInfoCenter setNowPlayingInfo:songInfo];
 }
+    
+    
+//- (void) unsetInfos {
+//    MPNowPlayingInfoCenter * nowPlayingInfoCenter =  [MPNowPlayingInfoCenter defaultCenter];
+//    [nowPlayingInfoCenter setNowPlayingInfo:nil];
+//}
 
 - (void) setCommands {
     [self unsetCommands];
@@ -131,15 +126,23 @@ MusicControlsInfo * musicControlsInfo;
     MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
     
     [commandCenter.playCommand removeTarget:self];
+    [commandCenter.playCommand removeTarget:self];
+    [commandCenter.playCommand setEnabled:false];
     [commandCenter.pauseCommand removeTarget:self];
+    [commandCenter.pauseCommand setEnabled:false];
     [commandCenter.nextTrackCommand removeTarget:self];
+    [commandCenter.nextTrackCommand setEnabled:false];
     [commandCenter.previousTrackCommand removeTarget:self];
+    [commandCenter.previousTrackCommand setEnabled:false];
     
     //Some functions are not available in earlier versions
     if(floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_9_0){
         [commandCenter.skipForwardCommand removeTarget:self];
+        [commandCenter.skipForwardCommand setEnabled:false];
         [commandCenter.skipBackwardCommand removeTarget:self];
+        [commandCenter.skipBackwardCommand setEnabled:false];
         [commandCenter.changePlaybackPositionCommand removeTarget:self];
+        [commandCenter.changePlaybackPositionCommand setEnabled:false];
     }
 }
 
@@ -172,19 +175,12 @@ MusicControlsInfo * musicControlsInfo;
 }
 
 - (void)pluginInitialize {
+
     // INTERRUPTION
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(interruption:) name:AVAudioSessionInterruptionNotification object: [AVAudioSession sharedInstance]];
     
-    // REGISTER FOR CONTROL CENTER ACTIONS
-    
-    
-    
 }
-
-- (void) voidRemoteCommandEvent:(MPRemoteCommandEvent *)event {
-    return;
-}
-
+    
 
 - (void) play:(MPRemoteCommandEvent *)event {
     [self sendEvent:@"play"];
@@ -233,6 +229,48 @@ MusicControlsInfo * musicControlsInfo;
             NSLog(@"Audio Session Interruption Notification case default.");
             break;
     }
+}
+    
+    
+- (MPMediaItemArtwork *) createCoverArtwork: (NSString *) coverUri {
+    UIImage * coverImage = nil;
+    
+    if (coverUri == nil) {
+        return nil;
+    }
+    
+    if ([coverUri hasPrefix:@"http://"] || [coverUri hasPrefix:@"https://"]) {
+        NSURL * coverImageUrl = [NSURL URLWithString:coverUri];
+        NSData * coverImageData = [NSData dataWithContentsOfURL: coverImageUrl];
+        
+        coverImage = [UIImage imageWithData: coverImageData];
+    }
+    else if ([coverUri hasPrefix:@"file://"]) {
+        NSString * fullCoverImagePath = [coverUri stringByReplacingOccurrencesOfString:@"file://" withString:@""];
+        
+        if ([[NSFileManager defaultManager] fileExistsAtPath: fullCoverImagePath]) {
+            coverImage = [[UIImage alloc] initWithContentsOfFile: fullCoverImagePath];
+        }
+    }
+    else if (![coverUri isEqual:@""]) {
+        NSString * baseCoverImagePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+        NSString * fullCoverImagePath = [NSString stringWithFormat:@"%@%@", baseCoverImagePath, coverUri];
+        
+        if ([[NSFileManager defaultManager] fileExistsAtPath:fullCoverImagePath]) {
+            coverImage = [UIImage imageNamed:fullCoverImagePath];
+        }
+    }
+    else {
+        coverImage = [UIImage imageNamed:@"none"];
+    }
+    
+    return [self isCoverImageValid:coverImage] ? [[MPMediaItemArtwork alloc] initWithImage:coverImage] : nil;
+}
+
+    
+    
+- (bool) isCoverImageValid: (UIImage *) coverImage {
+    return coverImage != nil && ([coverImage CIImage] != nil || [coverImage CGImage] != nil);
 }
 
 @end

@@ -1,5 +1,16 @@
 # Cordova Audio Controller Plugin
 
+## Thanks
+
+This plugin is partly inspired by https://github.com/homerours/cordova-music-controls-plugin repository. It is not updated on NPM anymore so I took the liberty to rewrite objective C code and push it with a different name.
+
+#### Major diffferences
+
+* Removed the listen() method (it is now automatic)
+* Fixed a lot of bugs on IOS
+* Added a Audio interruption event on IOS
+* Removed the updateIsPlaying method and destroy on IOS (for now)
+
 <img src='https://imgur.com/fh3ACOq.png' width='564' height='342'>
 
 Music controls for Cordova applications. Display a 'media' notification with play/pause, previous, next buttons, allowing the user to control the play. Handle also headset event (plug, unplug, headset button).
@@ -12,7 +23,7 @@ Music controls for Cordova applications. Display a 'media' notification with pla
 `cordova plugin add https://github.com/bhvr-business-solutions/cordova-plugin-audiocontroller`
 
 ## Methods
-- Create the media controls:
+- Replace the media controls:
 ```javascript
 AudioController.setControls({
     track       : 'Time is Running Out',		// optional, default : ''
@@ -28,13 +39,8 @@ AudioController.setControls({
     album       : 'Absolution',     // optional, default: ''
     
 });
-
 ```
-<!-- 
-- Destroy the media controller:
-```javascript
-MusicControls.destroy(onSuccess, onError);
-``` -->
+
 
 - Subscribe events to the media controller:
 ```javascript
@@ -44,21 +50,6 @@ AudioController.subscribe(function(eventName) {
 });
 ```
 
-<!-- - Toggle play/pause:
-```javascript
-MusicControls.updateIsPlaying(true); // toggle the play/pause notification button
-MusicControls.updateDismissable(true);
-``` -->
-
-<!-- - iOS Specific Events:
-Allows you to listen for iOS events fired from the scrubber in control center.
-```javascript
-MusicControls.updateElapsed({
-	elapsed: 208, // seconds
-	isPlaying: true
-});
-``` -->
-
 ## List of media button events 
 - Default:
 ```javascript
@@ -67,18 +58,23 @@ MusicControls.updateElapsed({
 
 - Android only:
 ```javascript
-'music-controls-media-button-next', 'music-controls-media-button-pause', 'music-controls-media-button-play',
-'music-controls-media-button-play-pause', 'music-controls-media-button-previous', 'music-controls-media-button-stop',
-'music-controls-media-button-fast-forward', 'music-controls-media-button-rewind', 'music-controls-media-button-skip-backward',
-'music-controls-media-button-skip-forward', 'music-controls-media-button-step-backward', 'music-controls-media-button-step-forward',
-'music-controls-media-button-meta-left', 'music-controls-media-button-meta-right', 'music-controls-media-button-music',
-'music-controls-media-button-volume-up', 'music-controls-media-button-volume-down', 'music-controls-media-button-volume-mute',
-'music-controls-media-button-headset-hook'
+'previous', 'next', 'pause', 'play',
+'skip-backward', 'skip-forward'
 ```
 
 - iOS Only:
 ```javascript
-'music-controls-skip-forward', 'music-controls-skip-backward'
+'music-controls-skip-forward', 'music-controls-skip-backward', 'interruption-started', 'interruption-ended', 'seek' (2nd argument available)
+```
+
+- Android Only:
+```javascript
+'fast-forward', 'rewind',
+'play-pause', 'stop',
+'step-backward', 'step-forward',
+'meta-left', 'meta-right', 'music',
+'volume-up', 'volume-down', 'volume-mute',
+'headset-hook'
 ```
 
 ## Contributing
@@ -88,3 +84,5 @@ MusicControls.updateElapsed({
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+Thanks !

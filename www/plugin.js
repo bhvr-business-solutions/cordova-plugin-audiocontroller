@@ -61,6 +61,14 @@ var AudioController = {
     data.notificationIcon = !isUndefined(data.notificationIcon) ? data.notificationIcon : "";
 
     exec(function() {}, null, PLUGIN_NAME, 'setControls', [data]);
+  },
+
+  unsetControls: function() {
+    exec(function() {}, null, PLUGIN_NAME, 'unsetControls', []);
+  },
+
+  updateIsPlaying: function(isPlaying) {
+    exec(function() {}, null, PLUGIN_NAME, 'updateIsPlaying', [isPlaying]);
   }
 };
 

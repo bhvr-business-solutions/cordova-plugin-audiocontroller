@@ -7,5 +7,7 @@
 
 - (void)subscribe:(CDVInvokedUrlCommand *)command;
 - (void)setControls:(CDVInvokedUrlCommand *)command;
+//- (void)updateIsPlaying:(CDVInvokedUrlCommand *)command;
+//- (void)unsetControls:(CDVInvokedUrlCommand *)command;
 
 @end
