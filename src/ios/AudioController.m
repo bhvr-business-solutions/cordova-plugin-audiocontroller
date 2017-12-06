@@ -13,7 +13,6 @@ MusicControlsInfo * musicControlsInfo;
 
 - (void)subscribe:(CDVInvokedUrlCommand *)command {
     [self.commandDelegate runInBackground:^{
-        NSLog(@"Subscribe");
         [self setLatestEventCallbackId:command.callbackId];
     }];
 }
@@ -21,7 +20,6 @@ MusicControlsInfo * musicControlsInfo;
 - (void)setControls:(CDVInvokedUrlCommand *)command {
     
     [self.commandDelegate runInBackground:^{
-        NSLog(@"setControls");
         
         if (!NSClassFromString(@"MPNowPlayingInfoCenter")) {
             NSLog(@"setControls failed (class not existing)");
@@ -85,8 +83,6 @@ MusicControlsInfo * musicControlsInfo;
 //}
 
 - (void) setCommands {
-    [self unsetCommands];
-    
     MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
     
     [commandCenter.playCommand setEnabled:true];
@@ -97,10 +93,14 @@ MusicControlsInfo * musicControlsInfo;
     if(musicControlsInfo.hasNext){
         [commandCenter.nextTrackCommand setEnabled:true];
         [commandCenter.nextTrackCommand addTarget:self action:@selector(next:)];
+    } else {
+        [commandCenter.nextTrackCommand setEnabled:false];
     }
     if(musicControlsInfo.hasPrev){
         [commandCenter.previousTrackCommand setEnabled:true];
         [commandCenter.previousTrackCommand addTarget:self action:@selector(previous:)];
+    } else {
+        [commandCenter.previousTrackCommand setEnabled:false];
     }
 
     //Some functions are not available in earlier versions
@@ -109,40 +109,22 @@ MusicControlsInfo * musicControlsInfo;
             commandCenter.skipForwardCommand.preferredIntervals = @[@(musicControlsInfo.skipForwardInterval)];
             [commandCenter.skipForwardCommand setEnabled:true];
             [commandCenter.skipForwardCommand addTarget: self action:@selector(skipForward:)];
+        } else {
+            [commandCenter.skipForwardCommand setEnabled:false];
         }
         if(musicControlsInfo.hasSkipBackward){
             commandCenter.skipBackwardCommand.preferredIntervals = @[@(musicControlsInfo.skipForwardInterval)];
             [commandCenter.skipBackwardCommand setEnabled:true];
             [commandCenter.skipBackwardCommand addTarget: self action:@selector(skipBackward:)];
+        } else {
+            [commandCenter.skipBackwardCommand setEnabled:false];
         }
         if(musicControlsInfo.hasScrubbing){
             [commandCenter.changePlaybackPositionCommand setEnabled:true];
             [commandCenter.changePlaybackPositionCommand addTarget:self action:@selector(changedThumbSliderOnLockScreen:)];
+        } else {
+            [commandCenter.changePlaybackPositionCommand setEnabled:false];
         }
-    }
-}
-
-- (void) unsetCommands {
-    MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
-    
-    [commandCenter.playCommand removeTarget:self];
-    [commandCenter.playCommand removeTarget:self];
-    [commandCenter.playCommand setEnabled:false];
-    [commandCenter.pauseCommand removeTarget:self];
-    [commandCenter.pauseCommand setEnabled:false];
-    [commandCenter.nextTrackCommand removeTarget:self];
-    [commandCenter.nextTrackCommand setEnabled:false];
-    [commandCenter.previousTrackCommand removeTarget:self];
-    [commandCenter.previousTrackCommand setEnabled:false];
-    
-    //Some functions are not available in earlier versions
-    if(floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_9_0){
-        [commandCenter.skipForwardCommand removeTarget:self];
-        [commandCenter.skipForwardCommand setEnabled:false];
-        [commandCenter.skipBackwardCommand removeTarget:self];
-        [commandCenter.skipBackwardCommand setEnabled:false];
-        [commandCenter.changePlaybackPositionCommand removeTarget:self];
-        [commandCenter.changePlaybackPositionCommand setEnabled:false];
     }
 }
 
@@ -155,7 +137,6 @@ MusicControlsInfo * musicControlsInfo;
  */
 
 - (void)sendEvent:(NSString *) eventName {
-    NSLog(@"SEND EVENT %@", eventName);
     if ([self latestEventCallbackId] == nil) {
         return;
     }
@@ -165,7 +146,6 @@ MusicControlsInfo * musicControlsInfo;
 }
 
 - (void)sendSeekEvent:(double) positionTime {
-    NSLog(@"SEEK TO %f", positionTime);
     if ([self latestEventCallbackId] == nil) {
         return;
     }
