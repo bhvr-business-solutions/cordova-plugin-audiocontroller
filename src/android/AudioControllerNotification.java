@@ -190,34 +190,34 @@ public class AudioControllerNotification {
 		/* Previous  */
 		if (infos.hasPrev){
 			nbControls++;
-			Intent previousIntent = new Intent("music-controls-previous");
+			Intent previousIntent = new Intent("previous");
 			PendingIntent previousPendingIntent = PendingIntent.getBroadcast(context, 1, previousIntent, 0);
 			builder.addAction(this.getResourceId(infos.prevIcon, android.R.drawable.ic_media_previous), "", previousPendingIntent);
 		}
 		if (infos.isPlaying){
 			/* Pause  */
 			nbControls++;
-			Intent pauseIntent = new Intent("music-controls-pause");
+			Intent pauseIntent = new Intent("pause");
 			PendingIntent pausePendingIntent = PendingIntent.getBroadcast(context, 1, pauseIntent, 0);
 			builder.addAction(this.getResourceId(infos.pauseIcon, android.R.drawable.ic_media_pause), "", pausePendingIntent);
 		} else {
 			/* Play  */
 			nbControls++;
-			Intent playIntent = new Intent("music-controls-play");
+			Intent playIntent = new Intent("play");
 			PendingIntent playPendingIntent = PendingIntent.getBroadcast(context, 1, playIntent, 0);
 			builder.addAction(this.getResourceId(infos.playIcon, android.R.drawable.ic_media_play), "", playPendingIntent);
 		}
 		/* Next */
 		if (infos.hasNext){
 			nbControls++;
-			Intent nextIntent = new Intent("music-controls-next");
+			Intent nextIntent = new Intent("next");
 			PendingIntent nextPendingIntent = PendingIntent.getBroadcast(context, 1, nextIntent, 0);
 			builder.addAction(this.getResourceId(infos.nextIcon, android.R.drawable.ic_media_next), "", nextPendingIntent);
 		}
 		/* Close */
 		if (infos.hasClose){
 			nbControls++;
-			Intent destroyIntent = new Intent("music-controls-destroy");
+			Intent destroyIntent = new Intent("destroy");
 			PendingIntent destroyPendingIntent = PendingIntent.getBroadcast(context, 1, destroyIntent, 0);
 			builder.addAction(this.getResourceId(infos.closeIcon, android.R.drawable.ic_menu_close_clear_cancel), "", destroyPendingIntent);
 		}
