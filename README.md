@@ -77,17 +77,13 @@ AudioController.subscribe(function(eventName) {
 - Default:
 ```javascript
 'play', 'pause',
-```
-
-- Android only:
-```javascript
 'previous', 'next', 'pause', 'play',
 'skip-backward', 'skip-forward'
 ```
 
 - iOS Only:
 ```javascript
-'music-controls-skip-forward', 'music-controls-skip-backward', 'interruption-started', 'interruption-ended', 'seek' (2nd argument available)
+'interruption-started', 'interruption-ended', 'seek' (2nd argument available)
 ```
 
 - Android Only:
