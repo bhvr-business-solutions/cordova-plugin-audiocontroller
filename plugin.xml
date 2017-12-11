@@ -27,11 +27,11 @@
 			</feature>
 		</config-file>
 
-		<config-file target="AndroidManifest.xml" parent="/*">
+		<config-file target="app/src/main/AndroidManifest.xml" parent="/*">
 			<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 		</config-file>
 
-		<config-file target="AndroidManifest.xml" parent="/manifest/application">
+		<config-file target="app/src/main/AndroidManifest.xml" parent="/manifest/application">
 			<service android:name="com.mokto.audiocontroller.AudioControllerNotificationKiller"></service>
 		</config-file>
 
