@@ -139,7 +139,7 @@ public class AudioControllerNotification {
 		// set if the notification can be destroyed by swiping
 		if (infos.dismissable){
 			builder.setOngoing(false);
-			Intent dismissIntent = new Intent("music-controls-destroy");
+			Intent dismissIntent = new Intent("destroy");
 			PendingIntent dismissPendingIntent = PendingIntent.getBroadcast(context, 1, dismissIntent, 0);
 			builder.setDeleteIntent(dismissPendingIntent);
 		} else {
@@ -248,7 +248,9 @@ public class AudioControllerNotification {
 	}
 
 	public void destroy(){
-		this.notificationManager.cancel(this.notificationID);
+		Notification noti = this.notificationBuilder.setOngoing(false).build();
+		this.notificationManager.notify(this.notificationID, noti);
+		this.notificationManager.cancelAll();
 	}
 }
 
