@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     id="cordova-plugin-audiocontroller"
-    version="1.0.1">
+    version="1.0.3">
     <name>Cordova Plugin Audio Controller</name>
     <description></description>
     <license>MIT</license>
