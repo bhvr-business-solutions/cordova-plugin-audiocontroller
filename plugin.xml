@@ -29,10 +29,11 @@
 
 		<config-file target="AndroidManifest.xml" parent="/*">
 			<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+            <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"></uses-permission>
 		</config-file>
 
 		<config-file target="AndroidManifest.xml" parent="/manifest/application">
-			<service android:name="com.mokto.audiocontroller.AudioControllerNotificationKiller"></service>
+			<service android:name="com.mokto.audiocontroller.AudioControllerNotificationKiller" android:stopWithTask="false"></service>
 		</config-file>
 
 		<source-file src="src/android/AudioController.java" target-dir="src/com/mokto/audiocontroller" />

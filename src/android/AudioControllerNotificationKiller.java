@@ -27,4 +27,16 @@ public class AudioControllerNotificationKiller extends Service {
 		mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		mNM.cancel(NOTIFICATION_ID);
 	}
+
+	@Override
+	public void onTaskRemoved(Intent rootIntent) {
+
+		String PACKAGE_NAME = getApplicationContext().getPackageName();
+
+		ActivityManager am = (ActivityManager) getSystemService(Activity.ACTIVITY_SERVICE);
+		am.killBackgroundProcesses(PACKAGE_NAME);
+
+		NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+		notificationManager.cancel(this.NOTIFICATION_ID);
+	}
 }
