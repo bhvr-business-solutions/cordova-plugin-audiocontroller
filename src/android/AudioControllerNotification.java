@@ -247,10 +247,12 @@ public class AudioControllerNotification {
 		}
 	}
 
-	public void destroy(){
-		Notification noti = this.notificationBuilder.setOngoing(false).build();
-		this.notificationManager.notify(this.notificationID, noti);
-		this.notificationManager.cancelAll();
+	public void destroy() {
+		if (this.notificationBuilder != null) {
+			Notification noti = this.notificationBuilder.setOngoing(false).build();
+			this.notificationManager.notify(this.notificationID, noti);
+			this.notificationManager.cancelAll();
+		}
 	}
 }
 
